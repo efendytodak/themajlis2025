@@ -28,6 +28,14 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout }) => {
           <div className="flex items-center space-x-2 sm:space-x-4 flex-wrap absolute right-4 sm:right-6">
             {isLoggedIn ? (
               <>
+                {!isDashboardPage && (
+                  <Link 
+                    to="/dashboard" 
+                    className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 sm:py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 rounded-lg sm:rounded-xl transition-all duration-300 font-medium border border-emerald-200 text-sm sm:text-base"
+                  >
+                    <Home className="w-5 h-5" />
+                  </Link>
+                )}
                 <button 
                   onClick={onLogout}
                   className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 sm:py-2.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg sm:rounded-xl transition-all duration-300 font-medium border border-red-200 text-sm sm:text-base"
