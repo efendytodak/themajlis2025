@@ -11,6 +11,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout }) => {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
   const isDashboardPage = location.pathname === '/dashboard';
+  const isAddMajlisPage = location.pathname === '/add-majlis';
 
   return (
     <header className="bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
@@ -28,7 +29,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout }) => {
           <div className="flex items-center space-x-2 sm:space-x-4 flex-wrap absolute right-4 sm:right-6">
             {isLoggedIn ? (
               <>
-                {!isDashboardPage && (
+                {!isDashboardPage && !isAddMajlisPage && (
                   <Link 
                     to="/dashboard" 
                     className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 sm:py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 rounded-lg sm:rounded-xl transition-all duration-300 font-medium border border-emerald-200 text-sm sm:text-base"
