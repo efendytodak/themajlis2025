@@ -568,7 +568,6 @@ const MajlisGrid: React.FC = () => {
                           <Heart 
                             className={`w-3.5 h-3.5 ${hasUserLiked(majlis) ? 'fill-current' : ''}`} 
                           />
-                          <span className="text-xs font-medium">{majlis.like_count || 0}</span>
                         </button>
                         
                           <button
