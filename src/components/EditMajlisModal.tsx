@@ -440,13 +440,25 @@ const EditMajlisModal: React.FC<EditMajlisModalProps> = ({ majlis, isOpen, onClo
               <div>
                 <div className="relative">
                   <Clock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="time"
+                  <select
                     value={formData.time}
                     onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
-                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:border-emerald-500 focus:bg-white focus:outline-none transition-all duration-300"
+                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:border-emerald-500 focus:bg-white focus:outline-none transition-all duration-300 appearance-none"
                     required
-                  />
+                  >
+                    <option value="">Select time</option>
+                    {Array.from({ length: 48 }, (_, i) => {
+                      const hours = Math.floor(i / 2);
+                      const minutes = (i % 2) * 30;
+                      const timeValue = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+                      const displayTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+                      return (
+                        <option key={timeValue} value={timeValue}>
+                          {displayTime}
+                        </option>
+                      );
+                    })}
+                  </select>
                 </div>
                 <p className="text-sm text-gray-500 mt-2 ml-1">Time</p>
               </div>
