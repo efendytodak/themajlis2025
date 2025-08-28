@@ -451,7 +451,22 @@ const EditMajlisModal: React.FC<EditMajlisModalProps> = ({ majlis, isOpen, onClo
                       const hours = Math.floor(i / 2);
                       const minutes = (i % 2) * 30;
                       const timeValue = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-                      const displayTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+                      
+                      // Convert to 12-hour format for display
+                      let displayHours = hours;
+                      let period = 'AM';
+                      
+                      if (hours === 0) {
+                        displayHours = 12;
+                      } else if (hours === 12) {
+                        period = 'PM';
+                      } else if (hours > 12) {
+                        displayHours = hours - 12;
+                        period = 'PM';
+                      }
+                      
+                      const displayTime = `${displayHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${period}`;
+                      
                       return (
                         <option key={timeValue} value={timeValue}>
                           {displayTime}
