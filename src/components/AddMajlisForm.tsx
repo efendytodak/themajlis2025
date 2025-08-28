@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Clock, User, Tag, Save, MapPin, Users } from 'lucide-react';
+import { ArrowLeft, Clock, User, Tag, Save, MapPin, Users, Calendar } from 'lucide-react';
 import { database } from '../lib/supabase';
 import PlacesAutocomplete from './PlacesAutocomplete';
 
@@ -423,7 +423,7 @@ const AddMajlisForm: React.FC = () => {
                 {/* Start Date */}
                 <div>
                   <div className="relative">
-                    <img src="/kubahnew.png" alt="kubahnew.png" className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5" />
+                    <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <input
                       type="date"
                       value={formData.startDate}
@@ -439,7 +439,7 @@ const AddMajlisForm: React.FC = () => {
                 {isMultiDayEvent && (
                   <div>
                     <div className="relative">
-                      <img src="/kubahnew.png" alt="kubahnew.png" className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5" />
+                      <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                       <input
                         type="date"
                         value={formData.endDate}
