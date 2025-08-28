@@ -26,7 +26,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout }) => {
           </Link>
           
           <div className="flex items-center space-x-2 sm:space-x-4 flex-wrap absolute right-4 sm:right-6">
-            {!isHomePage && (
+            {!isHomePage && !isDashboardPage && (
               <Link 
                 to="/" 
                 className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 sm:py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg sm:rounded-xl transition-all duration-300 font-medium border border-gray-200 text-sm sm:text-base"
