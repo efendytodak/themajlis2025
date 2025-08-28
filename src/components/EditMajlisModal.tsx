@@ -25,7 +25,6 @@ const EditMajlisModal: React.FC<EditMajlisModalProps> = ({ majlis, isOpen, onClo
     startDate: '',
     endDate: '',
     time: '',
-    period: 'AM' as 'AM' | 'PM',
     posterFiles: [] as File[]
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -49,16 +48,11 @@ const EditMajlisModal: React.FC<EditMajlisModalProps> = ({ majlis, isOpen, onClo
       
       // Parse time to extract hour, minute and period
       let timeValue = '';
-      let periodValue: 'AM' | 'PM' = 'AM';
       
       if (majlis.time) {
         const timeStr = majlis.time.toString();
-        if (timeStr.includes('AM') || timeStr.includes('PM')) {
-          periodValue = timeStr.includes('PM') ? 'PM' : 'AM';
-          timeValue = timeStr.replace(/\s*(AM|PM)\s*/i, '');
-        } else {
-          timeValue = timeStr;
-        }
+        // Remove AM/PM if present and just use the time part
+        timeValue = timeStr.replace(/\s*(AM|PM)\s*/i, '');
       }
 
       setFormData({
@@ -75,7 +69,6 @@ const EditMajlisModal: React.FC<EditMajlisModalProps> = ({ majlis, isOpen, onClo
         startDate: majlis.start_date || '', // Changed from date to startDate
         endDate: majlis.end_date || '', // Added endDate
         time: timeValue,
-        period: periodValue,
         posterFiles: [] // No files initially selected for edit
       });
       
@@ -200,7 +193,7 @@ const EditMajlisModal: React.FC<EditMajlisModalProps> = ({ majlis, isOpen, onClo
         longitude: formData.longitude,
         start_date: formData.startDate, // Changed from date to start_date
         end_date: isMultiDayEvent ? formData.endDate : formData.startDate, // Set end_date
-        time: `${formData.time} ${formData.period}`,
+        time: formData.time,
         poster_files: formData.posterFiles, // Pass the actual File objects
       };
       
@@ -456,19 +449,6 @@ const EditMajlisModal: React.FC<EditMajlisModalProps> = ({ majlis, isOpen, onClo
                   />
                 </div>
                 <p className="text-sm text-gray-500 mt-2 ml-1">Time</p>
-              </div>
-              
-              {/* Period */}
-              <div>
-                <select
-                  value={formData.period}
-                  onChange={(e) => setFormData(prev => ({ ...prev, period: e.target.value as 'AM' | 'PM' }))}
-                  className="w-full px-4 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:border-emerald-500 focus:bg-white focus:outline-none transition-all duration-300"
-                >
-                  <option value="AM">AM</option>
-                  <option value="PM">PM</option>
-                </select>
-                <p className="text-sm text-gray-500 mt-2 ml-1">Period</p>
               </div>
             </div>
           </div>

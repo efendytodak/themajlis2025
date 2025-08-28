@@ -19,7 +19,6 @@ const AddMajlisForm: React.FC = () => {
     startDate: '',
     endDate: '',
     time: '',
-    period: 'AM' as 'AM' | 'PM',
     audience: '',
     posterFiles: [] as File[]
   });
@@ -159,7 +158,7 @@ const AddMajlisForm: React.FC = () => {
         longitude: formData.longitude,
         start_date: formData.startDate, // Changed from date to start_date
         end_date: isMultiDayEvent ? formData.endDate : formData.startDate, // Set end_date
-        time: `${formData.time} ${formData.period}`,
+        time: formData.time,
         audience: formData.audience,
         poster_files: formData.posterFiles, // Pass the actual File objects
       };
@@ -466,19 +465,6 @@ const AddMajlisForm: React.FC = () => {
                     />
                   </div>
                   <p className="text-xs text-gray-500 mt-1 ml-1">Time</p>
-                </div>
-                
-                {/* Period */}
-                <div>
-                  <select
-                    value={formData.period}
-                    onChange={(e) => setFormData(prev => ({ ...prev, period: e.target.value as 'AM' | 'PM' }))}
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:bg-white focus:outline-none transition-all duration-300 text-sm"
-                  >
-                    <option value="AM">AM</option>
-                    <option value="PM">PM</option>
-                  </select>
-                  <p className="text-xs text-gray-500 mt-1 ml-1">Period</p>
                 </div>
               </div>
             </div>
