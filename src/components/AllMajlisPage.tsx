@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, MapPin, Map, Navigation, ArrowLeft, Search, Filter, Users, Share2, X, ZoomIn, ListOrdered, MapPinIcon, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Clock, MapPin, Map, Navigation, ArrowLeft, Search, Filter, Users, Share2, X, ZoomIn, ListOrdered, MapPinIcon, ToggleLeft, ToggleRight, Heart } from 'lucide-react';
 import { database } from '../lib/supabase';
+import { useAuth } from '../hooks/useAuth';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { filterMajlisByDistance, getDistanceText } from '../utils/locationUtils';
 
@@ -18,8 +19,10 @@ const AllMajlisPage: React.FC = () => {
   const [shareMessage, setShareMessage] = useState('');
   const [enlargedMajlis, setEnlargedMajlis] = useState<any | null>(null);
   const [currentPosterIndex, setCurrentPosterIndex] = useState(0);
+  const [likeMessage, setLikeMessage] = useState('');
 
   const { location, loading: locationLoading, error: locationError, requestLocation } = useUserLocation();
+  const { user, isAuthenticated } = useAuth();
 
   const categories = ['Al-Quran', 'Hadith', 'Fiqh', 'Sirah', 'Majlis Ilmu', 'Majlis Zikir'];
 
@@ -341,6 +344,51 @@ const AllMajlisPage: React.FC = () => {
     }
   };
 
+  const handleLike = async (majlis: any, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (!isAuthenticated) {
+      setLikeMessage('Please log in to like majlis events');
+      setTimeout(() => setLikeMessage(''), 3000);
+      return;
+    }
+
+    try {
+      const { data, error } = await database.toggleMajlisLike(majlis.id);
+      
+      if (error) {
+        setLikeMessage('Failed to update like. Please try again.');
+        setTimeout(() => setLikeMessage(''), 3000);
+        return;
+      }
+
+      if (data) {
+        // Update the majlis in the filtered list
+        setFilteredMajlis(prev => 
+          prev.map(m => m.id === majlis.id ? { ...m, like_count: data.like_count, liked_by: data.liked_by } : m)
+        );
+        
+        // Also update the main majlis list
+        setMajlisList(prev => 
+          prev.map(m => m.id === majlis.id ? { ...m, like_count: data.like_count, liked_by: data.liked_by } : m)
+        );
+        
+        setLikeMessage(data.userHasLiked ? 'Liked! ❤️' : 'Like removed');
+        setTimeout(() => setLikeMessage(''), 2000);
+      }
+    } catch (err) {
+      console.error('Error toggling like:', err);
+      setLikeMessage('Failed to update like. Please try again.');
+      setTimeout(() => setLikeMessage(''), 3000);
+    }
+  };
+
+  // Helper function to check if current user has liked a majlis
+  const hasUserLiked = (majlis: any): boolean => {
+    if (!user || !majlis.liked_by) return false;
+    return Array.isArray(majlis.liked_by) ? majlis.liked_by.includes(user.id) : false;
+  };
+
   const handlePosterClick = (majlis: any, initialIndex: number = 0) => {
     setEnlargedMajlis(majlis);
     setCurrentPosterIndex(initialIndex);
@@ -422,6 +470,13 @@ const AllMajlisPage: React.FC = () => {
         {shareMessage && (
           <div className="fixed top-4 right-4 bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-lg z-50">
             {shareMessage}
+          </div>
+        )}
+        
+        {/* Like Message */}
+        {likeMessage && (
+          <div className="fixed top-4 left-4 bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+            {likeMessage}
           </div>
         )}
 
@@ -738,8 +793,23 @@ const AllMajlisPage: React.FC = () => {
                     </div>
 
                     {/* Navigation Buttons */}
-                    {(majlis.address || majlis.city) && (
-                      <div className="flex items-center space-x-2 pt-3 border-t border-gray-100">
+                    <div className="flex items-center space-x-2 pt-3 border-t border-gray-100">
+                      {/* Like Button */}
+                      <button
+                        onClick={(e) => handleLike(majlis, e)}
+                        className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-colors duration-200 ${
+                          hasUserLiked(majlis)
+                            ? 'bg-red-100 hover:bg-red-200 text-red-600'
+                            : 'bg-gray-200 hover:bg-gray-300 text-gray-600'
+                        }`}
+                        title={isAuthenticated ? "Like this majlis" : "Login to like"}
+                      >
+                        <Heart 
+                          className={`w-3.5 h-3.5 ${hasUserLiked(majlis) ? 'fill-current' : ''}`} 
+                        />
+                        <span className="text-xs font-medium">{majlis.like_count || 0}</span>
+                      </button>
+                      
                         <button
                           onClick={(e) => handleShare(majlis, e)}
                           className="flex items-center space-x-1 px-3 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded-lg transition-colors duration-200"
@@ -748,6 +818,9 @@ const AllMajlisPage: React.FC = () => {
                           <Share2 className="w-3.5 h-3.5" />
                           <span className="text-xs font-medium">Share</span>
                         </button>
+                      
+                      {(majlis.address || majlis.city) && (
+                        <>
                         <a
                           href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                             majlis.address || `${majlis.city}${majlis.state ? ', ' + majlis.state : ''}`
@@ -772,22 +845,9 @@ const AllMajlisPage: React.FC = () => {
                           <Navigation className="w-3.5 h-3.5" />
                           <span className="text-xs font-medium">Waze</span>
                         </a>
-                      </div>
-                    )}
-                    
-                    {/* Share button for majlis without location */}
-                    {!(majlis.address || majlis.city) && (
-                      <div className="flex items-center space-x-2 pt-3 border-t border-gray-100">
-                        <button
-                          onClick={(e) => handleShare(majlis, e)}
-                          className="flex items-center space-x-1 px-3 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded-lg transition-colors duration-200"
-                          title="Share this majlis"
-                        >
-                          <Share2 className="w-3.5 h-3.5" />
-                          <span className="text-xs font-medium">Share</span>
-                        </button>
-                      </div>
-                    )}
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
