@@ -225,11 +225,11 @@ const AllMajlisPage: React.FC = () => {
     }
     
     // Handle "HH:MM AM/PM" format as fallback
-    const timeMatch = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-    if (timeMatch) {
-      let hours = parseInt(timeMatch[1]);
-      const minutes = parseInt(timeMatch[2]);
-      const period = timeMatch[3].toUpperCase();
+    const timeMatchAmPm = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+    if (timeMatchAmPm) {
+      let hours = parseInt(timeMatchAmPm[1]);
+      const minutes = parseInt(timeMatchAmPm[2]);
+      const period = timeMatchAmPm[3].toUpperCase();
       
       // Convert to 24-hour format
       if (period === 'PM' && hours !== 12) {
