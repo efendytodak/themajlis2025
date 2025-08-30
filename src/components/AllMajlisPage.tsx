@@ -216,21 +216,32 @@ const AllMajlisPage: React.FC = () => {
   const parseTimeToMinutes = (timeStr: string): number => {
     if (!timeStr) return 0;
     
-    const timeMatch = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-    if (!timeMatch) return 0;
-    
-    let hours = parseInt(timeMatch[1]);
-    const minutes = parseInt(timeMatch[2]);
-    const period = timeMatch[3].toUpperCase();
-    
-    // Convert to 24-hour format
-    if (period === 'PM' && hours !== 12) {
-      hours += 12;
-    } else if (period === 'AM' && hours === 12) {
-      hours = 0;
+    // Handle "HH:MM" format (24-hour) - this is how time is stored in database
+    const timeMatch = timeStr.match(/^(\d{1,2}):(\d{2})$/);
+    if (timeMatch) {
+      const hours = parseInt(timeMatch[1]);
+      const minutes = parseInt(timeMatch[2]);
+      return hours * 60 + minutes;
     }
     
-    return hours * 60 + minutes;
+    // Handle "HH:MM AM/PM" format as fallback
+    const timeMatch = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+    if (timeMatch) {
+      let hours = parseInt(timeMatch[1]);
+      const minutes = parseInt(timeMatch[2]);
+      const period = timeMatch[3].toUpperCase();
+      
+      // Convert to 24-hour format
+      if (period === 'PM' && hours !== 12) {
+        hours += 12;
+      } else if (period === 'AM' && hours === 12) {
+        hours = 0;
+      }
+      
+      return hours * 60 + minutes;
+    }
+    
+    return 0;
   };
 
   // Get unique cities for filter
@@ -239,49 +250,47 @@ const AllMajlisPage: React.FC = () => {
   const isUpcoming = (date: string, time?: string) => {
     if (!date) return false;
     
-    console.log('=== Checking majlis ===');
-    console.log('Date:', date);
-    console.log('Time:', time);
-    
     // Parse the majlis date and time
     const majlisDate = new Date(date);
-    console.log('Parsed majlisDate (before time):', majlisDate);
     
     if (time) {
-      // Parse time (format: "HH:MM AM/PM")
-      const timeMatch = time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-      console.log('Time match:', timeMatch);
+      // Handle "HH:MM" format (24-hour) - this is how time is stored in database
+      const timeMatch = time.match(/^(\d{1,2}):(\d{2})$/);
       if (timeMatch) {
-        let hours = parseInt(timeMatch[1]);
+        const hours = parseInt(timeMatch[1]);
         const minutes = parseInt(timeMatch[2]);
-        const period = timeMatch[3].toUpperCase();
-        console.log('Parsed time - hours:', hours, 'minutes:', minutes, 'period:', period);
-        
-        // Convert to 24-hour format
-        if (period === 'PM' && hours !== 12) {
-          hours += 12;
-        } else if (period === 'AM' && hours === 12) {
-          hours = 0;
-        }
-        console.log('24-hour format hours:', hours);
-        
         majlisDate.setHours(hours, minutes, 0, 0);
+      } else {
+        // Handle "HH:MM AM/PM" format as fallback
+        const timeMatchAmPm = time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+        if (timeMatchAmPm) {
+          let hours = parseInt(timeMatchAmPm[1]);
+          const minutes = parseInt(timeMatchAmPm[2]);
+          const period = timeMatchAmPm[3].toUpperCase();
+          
+          // Convert to 24-hour format
+          if (period === 'PM' && hours !== 12) {
+            hours += 12;
+          } else if (period === 'AM' && hours === 12) {
+            hours = 0;
+          }
+          
+          majlisDate.setHours(hours, minutes, 0, 0);
+        } else {
+          // If time format is unrecognized, assume end of day
+          majlisDate.setHours(23, 59, 59, 999);
+        }
       }
     } else {
       // If no time specified, assume end of day
       majlisDate.setHours(23, 59, 59, 999);
     }
     
-    console.log('Final majlisDate:', majlisDate);
-    
     // Current time
     const now = new Date();
-    console.log('Current time (now):', now);
     
-    // Check if majlis is upcoming (no grace period - event is considered "passed" immediately after start time)
+    // Check if majlis is upcoming
     const isUpcomingResult = now < majlisDate;
-    console.log('Is upcoming?', isUpcomingResult);
-    console.log('=== End check ===\n');
     
     return isUpcomingResult;
   };

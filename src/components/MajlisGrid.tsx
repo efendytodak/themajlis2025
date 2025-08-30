@@ -19,6 +19,85 @@ const MajlisGrid: React.FC = () => {
   const { location, loading: locationLoading, error: locationError, requestLocation, hasPermission } = useUserLocation();
   const { user } = useAuth();
 
+  // Helper function to parse time string to minutes for sorting
+  const parseTimeToMinutes = (timeStr: string): number => {
+    if (!timeStr) return 0;
+    
+    // Handle "HH:MM" format (24-hour)
+    const timeMatch = timeStr.match(/^(\d{1,2}):(\d{2})$/);
+    if (timeMatch) {
+      const hours = parseInt(timeMatch[1]);
+      const minutes = parseInt(timeMatch[2]);
+      return hours * 60 + minutes;
+    }
+    
+    // Handle "HH:MM AM/PM" format
+    const timeMatchAmPm = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+    if (timeMatchAmPm) {
+      let hours = parseInt(timeMatchAmPm[1]);
+      const minutes = parseInt(timeMatchAmPm[2]);
+      const period = timeMatchAmPm[3].toUpperCase();
+      
+      // Convert to 24-hour format
+      if (period === 'PM' && hours !== 12) {
+        hours += 12;
+      } else if (period === 'AM' && hours === 12) {
+        hours = 0;
+      }
+      
+      return hours * 60 + minutes;
+    }
+    
+    return 0;
+  };
+
+  // Helper function to check if majlis is upcoming
+  const isUpcoming = (date: string, time?: string) => {
+    if (!date) return false;
+    
+    // Parse the majlis date and time
+    const majlisDate = new Date(date);
+    
+    if (time) {
+      // Handle "HH:MM" format (24-hour) - this is how time is stored in database
+      const timeMatch = time.match(/^(\d{1,2}):(\d{2})$/);
+      if (timeMatch) {
+        const hours = parseInt(timeMatch[1]);
+        const minutes = parseInt(timeMatch[2]);
+        majlisDate.setHours(hours, minutes, 0, 0);
+      } else {
+        // Handle "HH:MM AM/PM" format as fallback
+        const timeMatchAmPm = time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+        if (timeMatchAmPm) {
+          let hours = parseInt(timeMatchAmPm[1]);
+          const minutes = parseInt(timeMatchAmPm[2]);
+          const period = timeMatchAmPm[3].toUpperCase();
+          
+          // Convert to 24-hour format
+          if (period === 'PM' && hours !== 12) {
+            hours += 12;
+          } else if (period === 'AM' && hours === 12) {
+            hours = 0;
+          }
+          
+          majlisDate.setHours(hours, minutes, 0, 0);
+        } else {
+          // If time format is unrecognized, assume end of day
+          majlisDate.setHours(23, 59, 59, 999);
+        }
+      }
+    } else {
+      // If no time specified, assume end of day
+      majlisDate.setHours(23, 59, 59, 999);
+    }
+    
+    // Current time
+    const now = new Date();
+    
+    // Check if majlis is upcoming
+    return now < majlisDate;
+  };
+
   // Helper function to get poster URLs as an array
   const getPosterUrls = (posterUrl: any): string[] => {
     if (!posterUrl) return [];
@@ -109,46 +188,24 @@ const MajlisGrid: React.FC = () => {
         const { data, error } = await database.getAllMajlis();
         if (data) {
           // Filter upcoming majlis with 2-hour grace period
-          const upcoming = data.filter(majlis => {
-            if (!majlis.start_date) return false;
-            
-            // Parse the majlis date and time
-            const majlisDate = new Date(majlis.start_date);
-            
-            if (majlis.time) {
-              // Parse time (format: "HH:MM AM/PM")
-              const timeMatch = majlis.time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-              if (timeMatch) {
-                let hours = parseInt(timeMatch[1]);
-                const minutes = parseInt(timeMatch[2]);
-                const period = timeMatch[3].toUpperCase();
-                
-                // Convert to 24-hour format
-                if (period === 'PM' && hours !== 12) {
-                  hours += 12;
-                } else if (period === 'AM' && hours === 12) {
-                  hours = 0;
-                }
-                
-                majlisDate.setHours(hours, minutes, 0, 0);
-              }
-            } else {
-              // If no time specified, assume end of day
-              majlisDate.setHours(23, 59, 59, 999);
-            }
-            
-            // Current time
-            const now = new Date();
-            
-            // Check if majlis is upcoming (no grace period)
-            return now < majlisDate;
-          });
-          // Sort by date ascending (nearest date first)
+          const upcoming = data.filter(majlis => isUpcoming(majlis.start_date, majlis.time));
+          
+          // Sort by date ascending, then by time ascending (nearest date and time first)
           const sortedUpcoming = upcoming.sort((a, b) => {
             const dateA = new Date(a.start_date);
             const dateB = new Date(b.start_date);
-            return dateA.getTime() - dateB.getTime();
+            const dateComparison = dateA.getTime() - dateB.getTime();
+            
+            // If dates are the same, sort by time
+            if (dateComparison === 0) {
+              const timeA = parseTimeToMinutes(a.time || '');
+              const timeB = parseTimeToMinutes(b.time || '');
+              return timeA - timeB;
+            }
+            
+            return dateComparison;
           });
+          
           setMajlisList(sortedUpcoming);
           setFilteredMajlisList(sortedUpcoming);
         } else if (error) {
