@@ -4,15 +4,15 @@ const IslamicQuotes: React.FC = () => {
   const quotes = [
     {
       text: "Apabila kalian melintasi taman-taman syurga, maka singgahlah.\" Para sahabat bertanya: \"Apa itu taman-taman syurga, wahai Rasulullah?\" Baginda menjawab: \"Majlis-majlis zikir (ilmu).\"",
-      source: "(HR. Tirmidzi, no. 3510)"
+      source: "(HR. Tirmidzi)"
     },
     {
       text: "Sesungguhnya para malaikat membentangkan sayapnya bagi penuntut ilmu, kerana reda terhadap apa yang dia lakukan.",
-      source: "(HR. Abu Daud, no. 3641)"
+      source: "(HR. Abu Daud)"
     },
     {
       text: "Barang siapa menempuh suatu jalan untuk mencari ilmu, maka Allah akan memudahkan baginya jalan menuju syurga.",
-      source: "(HR. Muslim, no. 2699)"
+      source: "(HR. Muslim)"
     }
   ];
 
