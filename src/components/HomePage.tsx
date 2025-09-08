@@ -16,6 +16,8 @@ const HomePage: React.FC = () => {
             </h1>
             <p className="text-l font-medium text-gray-600 mb-1 max-w-2xl mx-auto leading-relaxed">
               Gerbang Taman Syurga Anda <span className="~`` text-emerald-600">#themajlis</span>
+              <br />
+              بَابُ رَوْضَةٍ مِنْ رِيَاضِ الْجَنَّةِ
             </p>
           </div>
         </div>
