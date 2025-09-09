@@ -5,7 +5,7 @@ import MajlisGrid from './MajlisGrid';
 
 const HomePage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Hero Section with Floating Pictures Slider */}
       <section className="py-5 px-6">
         <div className="container mx-auto text-center">
