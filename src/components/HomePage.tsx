@@ -7,7 +7,7 @@ const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section with Floating Pictures Slider */}
-      <section className="py-20 px-6">
+      <section className="py-10 px-6">
         <div className="container mx-auto text-center">
           <div className="max-w-4xl mx-auto">
             <img 
