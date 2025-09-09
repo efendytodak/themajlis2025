@@ -10,15 +10,11 @@ const HomePage: React.FC = () => {
       <section className="py-20 px-6">
         <div className="container mx-auto text-center">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-7xl font-bold text-gray-900 mb-0 leading-tight">
-             the
-              <span className="~`` text-emerald-600">majlis</span>
-            </h1>
-            <p className="text-l font-medium text-gray-600 mb-1 max-w-2xl mx-auto leading-relaxed">
-              Gerbang Taman Syurga Anda <span className="~`` text-emerald-600">#themajlis</span>
-              <br />
-              <span className="text-3xl font-medium text-emerald-600">باب روضة من رياض الجنة</span>
-            </p>
+            <img 
+              src="/Head.png" 
+              alt="The Majlis - Gerbang Taman Syurga Anda" 
+              className="mx-auto max-w-full h-auto mb-4"
+            />
           </div>
         </div>
       </section>
