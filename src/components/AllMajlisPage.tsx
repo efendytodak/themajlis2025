@@ -800,7 +800,7 @@ const AllMajlisPage: React.FC = () => {
               </div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">No majlis found</h3>
               <p className="text-gray-500">
-                {searchTerm || selectedCategory || selectedCity
+                {searchTerm || selectedCategory || selectedState
                   ? 'Try adjusting your search or filters'
                   : locationFilterEnabled && location
                     ? `No majlis found within ${maxDistance}km of your location`
