@@ -14,6 +14,7 @@ const AllMajlisPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedState, setSelectedState] = useState('');
   const [selectedSortOption, setSelectedSortOption] = useState('date_asc');
+  const [availableStates, setAvailableStates] = useState<string[]>([]);
   const [locationFilterEnabled, setLocationFilterEnabled] = useState(false);
   const [maxDistance, setMaxDistance] = useState(50);
   const [shareMessage, setShareMessage] = useState('');
@@ -24,7 +25,6 @@ const AllMajlisPage: React.FC = () => {
   const { user } = useAuth();
 
   const categories = ['Al-Quran', 'Hadith', 'Fiqh', 'Sirah', 'Majlis Ilmu', 'Majlis Zikir'];
-  const states = ['Kuala Lumpur', 'Selangor', 'Perak'];
 
   // Helper function to parse location display
   const parseLocationDisplay = (majlis: any) => {
@@ -97,6 +97,14 @@ const AllMajlisPage: React.FC = () => {
         if (data) {
           setMajlisList(data);
           setFilteredMajlis(data);
+          
+          // Extract unique states from the data
+          const uniqueStates = [...new Set(
+            data
+              .map(majlis => majlis.state)
+              .filter(state => state && state.trim() !== '')
+          )].sort();
+          setAvailableStates(uniqueStates);
         } else if (error) {
           console.error('Error fetching majlis:', error);
         }
@@ -132,7 +140,8 @@ const AllMajlisPage: React.FC = () => {
       filtered = filtered.filter(majlis =>
         majlis.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         majlis.speaker.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (majlis.city && majlis.city.toLowerCase().includes(searchTerm.toLowerCase()))
+        (majlis.city && majlis.city.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (majlis.state && majlis.state.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
 
@@ -538,7 +547,7 @@ const AllMajlisPage: React.FC = () => {
                 className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:bg-white focus:outline-none transition-all duration-300 appearance-none"
               >
                 <option value="">All States</option>
-                {states.map(state => (
+                {availableStates.map(state => (
                   <option key={state} value={state}>{state}</option>
                 ))}
               </select>
