@@ -14,7 +14,6 @@ const AllMajlisPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedState, setSelectedState] = useState('');
   const [selectedSortOption, setSelectedSortOption] = useState('date_asc');
-  const [availableStates, setAvailableStates] = useState<string[]>([]);
   const [locationFilterEnabled, setLocationFilterEnabled] = useState(false);
   const [maxDistance, setMaxDistance] = useState(50);
   const [shareMessage, setShareMessage] = useState('');
@@ -23,6 +22,26 @@ const AllMajlisPage: React.FC = () => {
 
   const { location, loading: locationLoading, error: locationError, requestLocation } = useUserLocation();
   const { user } = useAuth();
+
+  // Complete list of Malaysian states and federal territories
+  const malaysianStates = [
+    'Johor',
+    'Kedah',
+    'Kelantan',
+    'Kuala Lumpur',
+    'Labuan',
+    'Melaka',
+    'Negeri Sembilan',
+    'Pahang',
+    'Penang',
+    'Perak',
+    'Perlis',
+    'Putrajaya',
+    'Sabah',
+    'Sarawak',
+    'Selangor',
+    'Terengganu'
+  ];
 
   const categories = ['Al-Quran', 'Hadith', 'Fiqh', 'Sirah', 'Majlis Ilmu', 'Majlis Zikir'];
 
@@ -97,14 +116,6 @@ const AllMajlisPage: React.FC = () => {
         if (data) {
           setMajlisList(data);
           setFilteredMajlis(data);
-          
-          // Extract unique states from the data
-          const uniqueStates = [...new Set(
-            data
-              .map(majlis => majlis.state)
-              .filter(state => state && state.trim() !== '')
-          )].sort();
-          setAvailableStates(uniqueStates);
         } else if (error) {
           console.error('Error fetching majlis:', error);
         }
@@ -547,7 +558,7 @@ const AllMajlisPage: React.FC = () => {
                 className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:bg-white focus:outline-none transition-all duration-300 appearance-none"
               >
                 <option value="">All States</option>
-                {availableStates.map(state => (
+                {malaysianStates.map(state => (
                   <option key={state} value={state}>{state}</option>
                 ))}
               </select>
