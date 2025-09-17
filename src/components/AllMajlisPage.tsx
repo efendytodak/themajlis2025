@@ -12,7 +12,7 @@ const AllMajlisPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedCity, setSelectedCity] = useState('');
+  const [selectedState, setSelectedState] = useState('');
   const [selectedSortOption, setSelectedSortOption] = useState('date_asc');
   const [locationFilterEnabled, setLocationFilterEnabled] = useState(false);
   const [maxDistance, setMaxDistance] = useState(50);
@@ -24,6 +24,7 @@ const AllMajlisPage: React.FC = () => {
   const { user } = useAuth();
 
   const categories = ['Al-Quran', 'Hadith', 'Fiqh', 'Sirah', 'Majlis Ilmu', 'Majlis Zikir'];
+  const states = ['Kuala Lumpur', 'Selangor', 'Perak'];
 
   // Helper function to parse location display
   const parseLocationDisplay = (majlis: any) => {
@@ -143,9 +144,9 @@ const AllMajlisPage: React.FC = () => {
     }
 
     // City filter
-    if (selectedCity) {
+    if (selectedState) {
       filtered = filtered.filter(majlis =>
-        majlis.city && majlis.city.toLowerCase().includes(selectedCity.toLowerCase())
+        majlis.state && majlis.state.toLowerCase().includes(selectedState.toLowerCase())
       );
     }
 
@@ -210,7 +211,7 @@ const AllMajlisPage: React.FC = () => {
     });
 
     setFilteredMajlis(filtered);
-  }, [searchTerm, selectedCategory, selectedCity, majlisList, selectedSortOption, locationFilterEnabled, location, maxDistance]);
+  }, [searchTerm, selectedCategory, selectedState, majlisList, selectedSortOption, locationFilterEnabled, location, maxDistance]);
 
   // Helper function to parse time string to minutes for sorting
   const parseTimeToMinutes = (timeStr: string): number => {
@@ -243,9 +244,6 @@ const AllMajlisPage: React.FC = () => {
     
     return 0;
   };
-
-  // Get unique cities for filter
-  const uniqueCities = Array.from(new Set(majlisList.map(majlis => majlis.city).filter(Boolean)));
 
   const isUpcoming = (date: string, time?: string) => {
     if (!date) return false;
@@ -531,16 +529,17 @@ const AllMajlisPage: React.FC = () => {
             </div>
 
             {/* City Filter */}
+            {/* State Filter */}
             <div className="relative">
               <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <select
-                value={selectedCity}
-                onChange={(e) => setSelectedCity(e.target.value)}
+                value={selectedState}
+                onChange={(e) => setSelectedState(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:bg-white focus:outline-none transition-all duration-300 appearance-none"
               >
-                <option value="">All Cities</option>
-                {uniqueCities.map(city => (
-                  <option key={city} value={city}>{city}</option>
+                <option value="">All States</option>
+                {states.map(state => (
+                  <option key={state} value={state}>{state}</option>
                 ))}
               </select>
             </div>
@@ -566,13 +565,13 @@ const AllMajlisPage: React.FC = () => {
           </div>
 
           {/* Clear Filters */}
-          {(searchTerm || selectedCategory || selectedCity || selectedSortOption !== 'date_asc' || locationFilterEnabled) && (
+          {(searchTerm || selectedCategory || selectedState || selectedSortOption !== 'date_asc' || locationFilterEnabled) && (
             <div className="mt-3 pt-3 border-t border-gray-100">
               <button
                 onClick={() => {
                   setSearchTerm('');
                   setSelectedCategory('');
-                  setSelectedCity('');
+                  setSelectedState('');
                   setSelectedSortOption('date_asc');
                   setLocationFilterEnabled(false);
                 }}
