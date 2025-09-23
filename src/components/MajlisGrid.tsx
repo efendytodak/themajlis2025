@@ -640,7 +640,7 @@ const MajlisGrid: React.FC = () => {
           >
             <div className="flex items-center mb-2">
               <div className="p-2 rounded-xl mr-3">
-                <img src="/kubahgreennew.png" alt="kubahgreennew.png" className="w-10 h-10" />
+                <img src="/iconpng.png" alt="iconpng.png" className="w-10 h-10" />
               </div>
               <div>
                 <h3 className="text-lg font-medium text-gray-600">Poster Majlis</h3>
