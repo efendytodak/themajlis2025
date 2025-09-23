@@ -32,7 +32,7 @@ const IslamicQuotes: React.FC = () => {
             >
               <div className="text-center mb-0">
                 <div className="inline-flex p-4 rounded-2xl transition-all duration-300">
-                  <img src="/kubahgreennew.png" alt="kubahgreennew.png" className="w-10 h-10" />
+                  <img src="/iconpng.png" alt="iconpng.png" className="w-10 h-10" />
                 </div>
               </div>
               <blockquote className="text-gray-700 text-center leading-relaxed mb-1 font-light text-sm">
