@@ -742,7 +742,7 @@ const AllMajlisPage: React.FC = () => {
                         {/* Date, Time, Location */}
                         <div className="space-y-1 text-sm text-gray-600 break-words">
                           <div className="flex items-center">
-                            <img src="/kubahnew.png" alt="kubahnew.png" className="w-4 h-4 mr-2" />
+                            <img src="/iconpng.png" alt="iconpng.png" className="w-4 h-4 mr-2" />
                             <span>
                               {majlis.start_date && new Date(majlis.start_date).toLocaleDateString('ms-MY', {
                                weekday: 'long',
