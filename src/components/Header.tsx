@@ -19,7 +19,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout }) => {
         <div className="flex items-center justify-center">
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="p-0 bg-white rounded-xl group-hover:bg-emerald-100 transition-all duration-300">
-             <img src="/kubahgreennew.png" alt="kubahgreennew.png" className="w-12 h-12" />
+             <img src="/iconpng.png" alt="iconpng.png" className="w-12 h-12" />
             </div>
             <span className="text-lg sm:text-xl font-bold text-gray-800 tracking-tight">
               themajlis.my
