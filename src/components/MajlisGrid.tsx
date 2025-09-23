@@ -609,7 +609,7 @@ const MajlisGrid: React.FC = () => {
                   ) : (
                 <div className="text-center py-4">
                   <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <img src="/kubahnew.png" alt="kubahnew.png" className="w-10 h-10" />
+                    <img src="/iconpng.png" alt="iconpng.png" className="w-10 h-10" />
                   </div>
                     <p className="text-gray-600 text-base">
                       {locationFilterEnabled && location 
