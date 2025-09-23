@@ -17,7 +17,7 @@ const IslamicQuotes: React.FC = () => {
   ];
 
   return (
-    <section className="py-0 px-6 bg-gray-50">
+    <section className="py-0 px-6 bg-white">
       <div className="container mx-auto">
         <div className="text-center mb-0">
           
