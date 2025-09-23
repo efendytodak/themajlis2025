@@ -196,7 +196,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ adminName }) => {
           <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 w-full mx-auto">
             <div className="flex items-center mb-6">
               <div className="p-2 rounded-xl mr-3">
-                <img src="/kubahnew.png" alt="kubahnew.png" className="w-6 h-6" />
+                <img src="/iconpng.png" alt="iconpng.png" className="w-6 h-6" />
               </div>
               <h2 className="text-medium font-bold text-gray-900">All Majlis</h2>
             </div>
