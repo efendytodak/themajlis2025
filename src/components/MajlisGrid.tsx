@@ -391,7 +391,7 @@ const MajlisGrid: React.FC = () => {
           <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition-all duration-500 flex flex-col">
             <div className="flex items-center mb-2">
               <div className="p-2 rounded-xl mr-3">
-                <img src="/kubahgreennew.png" alt="kubahgreennew.png" className="w-10 h-10" />
+                <img src="/iconpng.png" alt="iconpng.png" className="w-10 h-10" />
               </div>
               <div>
                 <h3 className="text-lg font-medium text-gray-600">Akan Datang</h3>
