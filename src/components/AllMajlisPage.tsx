@@ -899,7 +899,7 @@ const AllMajlisPage: React.FC = () => {
                   Speaker: {enlargedMajlis.speaker}
                 </p>
                 <div className="flex items-center text-sm text-gray-600">
-                  <img src="/kubahnew.png" alt="kubahnew.png" className="w-4 h-4 mr-2" />
+                  <img src="/iconpng.png" alt="iconpng.png" className="w-4 h-4 mr-2" />
                   <span>
                     {enlargedMajlis.start_date && new Date(enlargedMajlis.start_date).toLocaleDateString('ms-MY', {
                      weekday: 'long',
